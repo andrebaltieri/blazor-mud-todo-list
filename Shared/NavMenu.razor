@@ -1,0 +1,37 @@
+﻿@inject NavigationManager NavigationManager
+
+<MudNavMenu>
+    @if (AppState.Lists.Count == 0)
+    {
+        <NoTaksFoundComponent/>
+    }
+
+    @foreach (var item in AppState.Lists)
+    {
+        <MudNavLink OnClick="() => { GoToList(item.Id); }">@item.Title</MudNavLink>
+    }
+</MudNavMenu>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        AppState.OnChanged += OnAppStateChanged;
+    }
+
+    void Dispose()
+    {
+        AppState.OnChanged -= OnAppStateChanged;
+    }
+
+    private void OnAppStateChanged(object? o, EventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void GoToList(int id)
+    {
+        NavigationManager.NavigateTo($"/lists/{id}");
+    }
+
+}
